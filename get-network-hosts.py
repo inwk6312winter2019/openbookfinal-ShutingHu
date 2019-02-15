@@ -51,7 +51,7 @@ print(r_json)
 ticket = r_json["response"]["serviceTicket"]
 
 # URL for Host REST API call to get list of exisitng hosts on the network.
-url = "https://" + controller + "/api/v1/host?limit=1&offset=1"
+url = "https://" + controller + "/api/v1/host/count"
 
 #Content type must be included in the header as well as the ticket
 header = {"content-type": "application/json", "X-Auth-Token":ticket}
@@ -61,9 +61,33 @@ response = requests.get(url, headers=header, verify=False)
 
 # json.dumps serializes the json into a string and allows us to
 # print the response in a 'pretty' format with indentation etc.
-print ("Hosts = ")
-print (json.dumps(response.json(), indent=4, separators=(',', ': ')))
+#print ("Hosts = ")
+#print (json.dumps(response.json(), indent=4, separators=(',', ': ')))
 
 r_resp=response.json()
+count = 0
+count = r_resp["response"]
+print("The total number of hosts is %d" % count)
 
-print(r_resp["response"][0]["hostIp"])
+
+ticket = r_json["response"]["serviceTicket"]
+
+# URL for Host REST API call to get list of exisitng hosts on the network.
+url = "https://" + controller + "/api/v1/host"
+
+#Content type must be included in the header as well as the ticket
+header = {"content-type": "application/json", "X-Auth-Token":ticket}
+
+# this statement performs a GET on the specified host url
+response = requests.get(url, headers=header, verify=False)
+
+# json.dumps serializes the json into a string and allows us to
+# print the response in a 'pretty' format with indentation etc.
+#print ("Hosts = ")
+#print (json.dumps(response.json(), indent=4, separators=(',', ': ')))
+
+r_resp=response.json()
+for i in range(count):
+    print(r_resp["response"][i]["hostIp"])
+    print(r_resp["response"][i]["hostMac"])
+
